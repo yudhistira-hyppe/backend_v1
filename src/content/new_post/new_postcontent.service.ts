@@ -1482,9 +1482,9 @@ export class NewPostContentService {
     Contentevents_.postID = body.postID;
     Contentevents_._class = 'io.melody.hyppe.content.domain.ContentEvent';
 
-    let uniq=null;
-    uniq=await this.addUniqEvent(data_userbasics.email.toString(),"POST","true","ACCEPT",null,body.postID);
-    Contentevents_.uniqEvent=uniq;
+    // let uniq=null;
+    // uniq=await this.addUniqEvent(data_userbasics.email.toString(),"POST","true","ACCEPT",null,body.postID);
+    // Contentevents_.uniqEvent=uniq;
 
 
     this.contentEventService.create(Contentevents_);
