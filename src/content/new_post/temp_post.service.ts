@@ -1968,7 +1968,7 @@ export class TempPOSTService {
                 }
             },
             {
-                "$skip": (skip * limit)
+                "$skip": skip
             },
             {
                 "$limit": limit
@@ -4061,7 +4061,7 @@ export class TempPOSTService {
                 }
             },
             {
-                "$skip": (skip * limit)
+                "$skip": skip
             },
             {
                 "$limit": limit
@@ -6149,7 +6149,7 @@ export class TempPOSTService {
                 }
             },
             {
-                "$skip": (skip * limit)
+                "$skip": skip
             },
             {
                 "$limit": limit
