@@ -12262,7 +12262,7 @@ export class InterestCountService {
                     }
                 },
                 {
-                    $skip: skip
+                    $skip: (skip * limit)
                 },
                 {
                     $limit: limit
@@ -12370,7 +12370,7 @@ export class InterestCountService {
                     }
                 },
                 {
-                    $skip: skip
+                    $skip: (skip * limit)
                 },
                 {
                     $limit: limit
@@ -12475,7 +12475,7 @@ export class InterestCountService {
                     }
                 },
                 {
-                    $skip: skip
+                    $skip: (skip * limit)
                 },
                 {
                     $limit: limit
