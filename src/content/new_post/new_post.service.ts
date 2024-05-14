@@ -53414,7 +53414,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
           }
         },
         {
-          "$skip": (skip * limit)
+          "$skip": skip
         },
         {
           "$limit": limit
@@ -55507,7 +55507,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
           }
         },
         {
-          "$skip": (skip * limit)
+          "$skip": skip
         },
         {
           "$limit": limit
