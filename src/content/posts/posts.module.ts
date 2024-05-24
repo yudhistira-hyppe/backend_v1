@@ -51,9 +51,11 @@ import { UserbasicnewModule } from 'src/trans/userbasicnew/userbasicnew.module';
 import { NewpostModule } from '../disqus/newpost/newpost.module';
 import { NewPost2Module } from 'src/content/new_post2/new_post2.module';
 import { LogMigrationsModule } from 'src/trans/logmigrations/logmigrations.module';
+import { TemppostModule } from 'src/content/temppost/temppost.module';
 @Module({
 
     imports: [
+        TemppostModule,
         LogMigrationsModule,
         NewPost2Module,
         UserbasicnewModule,

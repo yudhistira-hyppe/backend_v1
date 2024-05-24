@@ -7,7 +7,7 @@ import { temppost } from './schemas/temppost.schema';
 
 import mongoose from 'mongoose';
 
-@Controller('api/temppost')
+@Controller()
 export class TemppostController {
     constructor(
         private readonly temppostService: TemppostService,

@@ -55,6 +55,7 @@ import { NewpostService } from '../disqus/newpost/newpost.service';
 import { mingrionRun } from 'src/trans/userbasics/dto/create-userbasic.dto';
 import { LogMigrationsService } from 'src/trans/logmigrations/logmigrations.service';
 import { LogMigrations } from 'src/trans/logmigrations/schema/logmigrations.schema';
+import { TemppostService } from 'src/content/temppost/temppost.service';
 @Controller()
 export class PostsController {
   private readonly logger = new Logger(PostsController.name);
@@ -86,7 +87,8 @@ export class PostsController {
     private readonly MediastikerService: MediastikerService,
     private readonly methodepaymentsService: MethodepaymentsService,
     private readonly logMigrationsService: LogMigrationsService,
-    private readonly NewPostService: NewpostService) { }
+    private readonly NewPostService: NewpostService,
+    private readonly TemppostService: TemppostService) { }
 
   @Post()
   async create(@Body() CreatePostsDto: CreatePostsDto) {
@@ -4179,7 +4181,7 @@ export class PostsController {
     var tempdata = null;
 
     try {
-      tempdata = await this.NewPostService.getRecentStory3(email, page, limit);
+      tempdata = await this.TemppostService.getRecentStory3(email, page, limit);
     } catch (e) {
       tempdata = null;
     }
