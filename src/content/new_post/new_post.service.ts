@@ -66,6 +66,20 @@ export class NewPostService {
     );
   }
 
+  async updateActive(id: string, updatedAt: string, remark: string) {
+    let data = await this.loaddata.updateMany({ "_id": id },
+
+      { $set: { "active": false, "updatedAt": updatedAt, "reportedUserHandle.$[].remark": remark, "reportedUserHandle.$[].status": "DELETE", "reportedUserHandle.$[].updatedAt": updatedAt } });
+    return data;
+  }
+
+  async updateActiveEmpty(id: string, updatedAt: string, reportedUserHandle: any[]) {
+    let data = await this.loaddata.updateMany({ "_id": id },
+
+      { $set: { "active": false, "updatedAt": updatedAt, "reportedUserHandle": reportedUserHandle } });
+    return data;
+  }
+
   async findByPostId(postID: string): Promise<newPosts> {
     return this.loaddata.findOne({ postID: postID }).exec();
   }
@@ -76,8 +90,8 @@ export class NewPostService {
   }
 
   async findByPostid(postID: string): Promise<newPosts> {
-    return this.loaddata.findOne({postID:postID}).exec();
-}
+    return this.loaddata.findOne({ postID: postID }).exec();
+  }
 
   async findid(id: string): Promise<newPosts> {
     return this.loaddata.findOne({ _id: id }).exec();
@@ -91,12 +105,12 @@ export class NewPostService {
     return this.loaddata.findOne({ _id: id }).exec();
   }
 
-  async findbyviewmail(email:string,postID:string): Promise<newPosts[]> {
-    return this.loaddata.find({ userView: { "$in" : [email]},"postID": postID, }).exec();
-}
-async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
-    return this.loaddata.find({ userLike: { "$in" : [email]},"postID": postID, }).exec();
-}
+  async findbyviewmail(email: string, postID: string): Promise<newPosts[]> {
+    return this.loaddata.find({ userView: { "$in": [email] }, "postID": postID, }).exec();
+  }
+  async findbylikemail(email: string, postID: string): Promise<newPosts[]> {
+    return this.loaddata.find({ userLike: { "$in": [email] }, "postID": postID, }).exec();
+  }
 
   async databasenew(buy: string, report: string, iduser: Object, username: string, description: string, kepemilikan: any[], statusjual: any[], postType: any[], kategori: any[], hashtag: any[], startdate: string, enddate: string, startmount: number, endmount: number, descending: boolean, page: number, limit: number, popular: any) {
 
@@ -10870,56 +10884,56 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
     var getdata = await this.loaddata.findOne({ postID: postID }).exec();
     var setinput = {};
     setinput['$inc'] = {
-        views: 1
+      views: 1
     };
     var setCEViewer = getdata.userView;
     setCEViewer.push(email_target);
     setinput["$set"] = {
-        "userView": setCEViewer
+      "userView": setCEViewer
     }
 
     this.loaddata.updateOne(
-        {
-            email: email,
-            postID: postID,
-        },
-        setinput,
-        function (err, docs) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(docs);
-            }
-        },
+      {
+        email: email,
+        postID: postID,
+      },
+      setinput,
+      function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(docs);
+        }
+      },
     );
-}
+  }
   async updateLike(email: string, email_target: string, postID: string) {
     var getdata = await this.loaddata.findOne({ postID: postID }).exec();
     var setinput = {};
     setinput['$inc'] = {
-        likes: 1
+      likes: 1
     };
     var setCELike = getdata.userLike;
     setCELike.push(email_target);
     setinput["$set"] = {
-        "userLike": setCELike
+      "userLike": setCELike
     }
 
     this.loaddata.updateOne(
-        {
-            email: email,
-            postID: postID,
-        },
-        setinput,
-        function (err, docs) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(docs);
-            }
-        },
+      {
+        email: email,
+        postID: postID,
+      },
+      setinput,
+      function (err, docs) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(docs);
+        }
+      },
     );
-}
+  }
 
   async updateNoneActive(email: string) {
     this.loaddata.updateMany(
@@ -13030,9 +13044,9 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
         "active": true
       },
       {
-        "email": 
-        { 
-            $not: /noneactive/ 
+        "email":
+        {
+          $not: /noneactive/
         }
       },
     );
@@ -18492,7 +18506,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -18874,7 +18888,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -19253,7 +19267,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -19630,7 +19644,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -20228,7 +20242,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -20824,7 +20838,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -21420,7 +21434,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -22234,7 +22248,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -23206,7 +23220,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -26297,7 +26311,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -26770,7 +26784,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -27460,7 +27474,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -28912,7 +28926,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                           {
                             "$filter":
                             {
-                              input:"$userAuth.userBadge",
+                              input: "$userAuth.userBadge",
                               as: "listbadge",
                               cond:
                               {
@@ -46340,7 +46354,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
             '$arrayElemAt': ['$setting.value', 0]
           },
           urlLink: 1,
-          judulLink:1,
+          judulLink: 1,
           "postID": 1,
           "tagPeople": "$userTag",
           "postType": 1,
@@ -47893,7 +47907,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
     var data = await this.loaddata.aggregate(pipeline);
     return data;
   }
-  
+
   async landingpageMigrationV2(email: string, emailLogin: string, type: string, postid: string, visibility: boolean, active: boolean, exp: boolean, withinsight: boolean, skip: number, limit: number) {
     var mongo = require('mongoose');
     var pipeline = [];
@@ -49281,7 +49295,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
     //   sortingdata = -1;
     // }
     // else {
-      sortingdata = 1;
+    sortingdata = 1;
     //}
 
     if (tipepost != null && tipepost != undefined) {
@@ -54871,7 +54885,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                       ]
                   },
                   "postID": 1,
-                  urlLink:  1,
+                  urlLink: 1,
                   judulLink: 1,
                   "mediaEndpoint": {
                     "$concat": [
@@ -56194,7 +56208,7 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
             "following": 1,
             "musicTitle": 1,
             "postID": 1,
-            urlLink:  1,
+            urlLink: 1,
             judulLink: 1,
             "artistName": 1,
             "albumName": 1,
@@ -56964,8 +56978,8 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
                       ]
                   },
                   "postID": 1,
-                  "urlLink":1,
-                  "judulLink":1,
+                  "urlLink": 1,
+                  "judulLink": 1,
                   "mediaEndpoint": {
                     "$concat": [
                       "/stream/",
@@ -60688,66 +60702,66 @@ async findbylikemail(email:string,postID:string): Promise<newPosts[]> {
   }
 
   async temppost() {
-  
+
     var query = await this.loaddata.aggregate(
       [
         {
           '$set': {
-              dateMonth: {
-                  '$dateToString': {
-                      format: '%Y-%m-%d %H:%M:%S',
-                      date: {
-                          '$add': [new Date(), - 3024000000]
-                      }
-                  }
+            dateMonth: {
+              '$dateToString': {
+                format: '%Y-%m-%d %H:%M:%S',
+                date: {
+                  '$add': [new Date(), - 3024000000]
+                }
               }
+            }
           }
-      },
-      {
+        },
+        {
           '$lookup': {
-              from: 'newUserBasics',
-              as: 'tag2',
-              let: {
-                  localID: {
-                      '$ifNull': ['$tagPeople', []]
-                  }
-              },
-              pipeline: [
-                  {
-                      '$match': 
-                         { '$expr': { '$in': [ '$_id', '$$localID' ] } },
-                         
-                  },
-                  {
-                      '$project': {
-                          username: 1
-                      }
-                  }
-              ]
-          }
-      },
-      {
-          $match: 
-          {
-              '$expr': {
-                  '$gte': ['$createdAt', '$dateMonth']
+            from: 'newUserBasics',
+            as: 'tag2',
+            let: {
+              localID: {
+                '$ifNull': ['$tagPeople', []]
               }
+            },
+            pipeline: [
+              {
+                '$match':
+                  { '$expr': { '$in': ['$_id', '$$localID'] } },
+
+              },
+              {
+                '$project': {
+                  username: 1
+                }
+              }
+            ]
+          }
+        },
+        {
+          $match:
+          {
+            '$expr': {
+              '$gte': ['$createdAt', '$dateMonth']
+            }
           },
-      },
-      {
-          $set:{
-              tagPeople:
-                  "$tag2"
+        },
+        {
+          $set: {
+            tagPeople:
+              "$tag2"
           }
-      },
-      {
-          $sort:{
-              createdAt:-1,
+        },
+        {
+          $sort: {
+            createdAt: -1,
           }
-      },
-      {
-          $out : "tempPosts"
-      },
+        },
+        {
+          $out: "tempPosts"
+        },
       ]
     );
     return query;
