@@ -76,7 +76,7 @@ async getRecentStory3(email: string, page: number, limit: number) {
 
         {
             "$set": {
-                "settimeStart":
+                "settimeStart": 
                 {
                     "$dateToString": {
                         "format": "%Y-%m-%d %H:%M:%S",
@@ -85,13 +85,13 @@ async getRecentStory3(email: string, page: number, limit: number) {
                         }
                     }
                 },
-
+                
             },
-
+            
         },
         {
             "$set": {
-                "settimeEnd":
+                "settimeEnd": 
                 {
                     "$dateToString": {
                         "format": "%Y-%m-%d %H:%M:%S",
@@ -103,12 +103,12 @@ async getRecentStory3(email: string, page: number, limit: number) {
             }
         },
         {
-            "$match":
+            "$match": 
             {
                 $and: [
-
+                    
                     {
-                        "$expr":
+                        "$expr": 
                         {
                             "$eq": ["$postType", "story"]
                         }
@@ -130,14 +130,14 @@ async getRecentStory3(email: string, page: number, limit: number) {
                         }
                     },
                     {
-                        "$expr":
+                        "$expr": 
                         {
                             "$gte": ["$createdAt", '$settimeStart']
                         },
-
+                        
                     },
                     {
-                        "$expr":
+                        "$expr": 
                         {
                             "$lte": ["$createdAt", '$settimeEnd']
                         }
@@ -147,9 +147,9 @@ async getRecentStory3(email: string, page: number, limit: number) {
                             {
                                 "reportedUser": {
                                     "$elemMatch": {
-                                        "email": email,
+                                        "email":email,
                                         "active": false,
-
+                                        
                                     }
                                 }
                             },
@@ -160,34 +160,28 @@ async getRecentStory3(email: string, page: number, limit: number) {
                                     }
                                 }
                             },
-
+                            
                         ]
                     },
-
+                    
                 ]
             },
-
+            
         },
         {
             $sort: {
                 createdAt: 1
             }
         },
-        // {
-        //     $skip: (page * limit)
-        // },
-        // {
-        //     $limit: limit
-        // },
         {
             $lookup: {
                 from: 'newUserBasics',
                 localField: 'email',
                 foreignField: 'email',
                 as: 'userBasic',
-
+                
             },
-
+            
         },
         {
             $lookup: {
@@ -195,95 +189,86 @@ async getRecentStory3(email: string, page: number, limit: number) {
                 localField: 'musicId',
                 foreignField: '_id',
                 as: 'music',
-
+                
             },
-
+            
         },
         {
             $set: {
-                "urluserBadges":
+                "urluserBadges": 
                 {
-                    "$filter":
+                    "$filter": 
                     {
-                        input: { $arrayElemAt: ["$userBasic.userBadge", 0] },
-                        as: "listuserbadge",
-                        cond:
-                        {
-                            "$and":
-                                [
-                                    {
-                                        "$eq":
-                                            [
-                                                "$$listuserbadge.isActive",
-                                                true
-                                            ]
-                                    },
-                                    {
-                                        "$lte":
-                                            [
-                                                {
-                                                    "$dateToString": {
-                                                        "format": "%Y-%m-%d %H:%M:%S",
-                                                        "date": {
-                                                            $add: [new Date(), 25200000]
-                                                        }
-                                                    }
-                                                },
-                                                "$$listuserbadge.endDatetime",
-
-                                            ]
-                                    }
-                                ]
+                        input: {
+                            $arrayElemAt: ["$userBasic.userBadge", 0]
                         },
-
+                        as: "listuserbadge",
+                        cond: 
+                        {
+                            "$and": 
+                            [
+                                {
+                                    "$eq": 
+                                    [
+                                        "$$listuserbadge.isActive",
+                                        true
+                                    ]
+                                },
+                                {
+                                    "$lte": 
+                                    [
+                                        {
+                                            "$dateToString": {
+                                                "format": "%Y-%m-%d %H:%M:%S",
+                                                "date": {
+                                                    $add: [new Date(), 25200000]
+                                                }
+                                            }
+                                        },
+                                        "$$listuserbadge.endDatetime",
+                                        
+                                    ]
+                                }
+                            ]
+                        },
+                        
                     }
                 }
             }
         },
         {
-            "$lookup": {
-                from: "contentevents",
-                as: "isView",
-                let: {
-
-                    storys: '$postID',
-
+            $set: {
+                userView: {
+                    $ifNull: ["$userView", []]
                 },
-                pipeline: [
+                
+            }
+        },
+        {
+            $set: {
+                isView: 
+                {
+                    $cond: 
                     {
-                        $match:
-                        {
-                            $or: [
-
-                                {
-                                    $and: [
-                                        {
-                                            $expr: {
-                                                $eq: ['$postID', '$$storys']
-                                            }
-                                        },
-                                        {
-                                            "email": email,
-
-                                        },
-                                        {
-                                            "eventType": "VIEW"
-                                        }
-                                    ]
+                        if : {
+                            $eq: ["$userView", []]
+                        },
+                        then: [],
+                        else : 
+                            {
+                            $cond: 
+                            {
+                                if : {
+                                    $in: [email, "$userView"]
                                 },
-
-                            ]
-                        }
-                    },
-                    {
-                        $project: {
-                            "email": 1,
-                            "postID": 1,
-
-                        }
+                                then: "$userView",
+                                else : []
+                            }
+                        },
+                        
                     }
-                ],
-
+                },
+                
             }
         },
         {
@@ -296,36 +281,36 @@ async getRecentStory3(email: string, page: number, limit: number) {
                 "musicTitle": {
                     "$arrayElemAt": ['$music.musicTitle', 0]
                 },
-                "artistName":
+                "artistName": 
                 {
                     "$arrayElemAt": ["$music.artistName", 0]
                 },
-                "albumName":
+                "albumName": 
                 {
                     "$arrayElemAt": ["$music.albumName", 0]
                 },
-                "apsaraMusic":
+                "apsaraMusic": 
                 {
                     "$arrayElemAt": ["$music.apsaraMusic", 0]
                 },
-                "apsaraThumnail":
+                "apsaraThumnail": 
                 {
                     "$arrayElemAt": ["$music.apsaraThumnail", 0]
                 },
-                "genre":
+                "genre": 
                 {
                     "$arrayElemAt": ["$music.genre.name", 0]
                 },
-                "theme":
+                "theme": 
                 {
                     "$arrayElemAt": ["$music.theme.name", 0]
                 },
-                "mood":
+                "mood": 
                 {
                     "$arrayElemAt": ["$music.mood.name", 0]
                 },
                 "testDate": 1,
-                "mediaType":
+                "mediaType": 
                 {
                     "$arrayElemAt": ["$mediaSource.mediaType", 0]
                 },
@@ -364,13 +349,13 @@ async getRecentStory3(email: string, page: number, limit: number) {
                 "apsaraThumbId": {
                     "$arrayElemAt": ["$mediaSource.apsaraThumbId", 0]
                 },
-                "insight":
+                "insight": 
                 {
                     "likes": "$likes",
                     "views": "$views",
                     "shares": "$shares",
                     "comments": "$comments",
-
+                    
                 }
                 ,
                 "fullName": {
@@ -389,28 +374,28 @@ async getRecentStory3(email: string, page: number, limit: number) {
                         }]
                     }
                 },
-                "urluserBadge":
+                "urluserBadge": 
                 {
-                    "$ifNull":
-                        [
-                            "$urluserBadges",
-                            null
-                        ]
+                    "$ifNull": 
+                    [
+                        "$urluserBadges",
+                        null
+                    ]
                 },
                 "statusCB": 1,
                 mediaEndpoint: {
                     "$concat": ["/pict/", "$postID"]
                 },
                 "privacy": {
-                    "isCelebrity":
+                    "isCelebrity": 
                     {
                         "$arrayElemAt": ["$userBasic.isCelebrity", 0]
                     },
-                    "isIdVerified":
+                    "isIdVerified": 
                     {
                         "$arrayElemAt": ["$userBasic.isIdVerified", 0]
                     },
-                    "isPrivate":
+                    "isPrivate": 
                     {
                         "$arrayElemAt": ["$userBasic.isPrivate", 0]
                     }
@@ -419,15 +404,15 @@ async getRecentStory3(email: string, page: number, limit: number) {
             }
         },
         {
-            "$group":
+            "$group": 
             {
                 _id: {
                     email: "$email",
                     username: "$username"
                 },
-                story:
+                story: 
                 {
-                    "$push":
+                    "$push": 
                     {
                         "mediaEndpoint": "$mediaEndpoint",
                         "postID": "$postID",
@@ -472,44 +457,44 @@ async getRecentStory3(email: string, page: number, limit: number) {
                             "albumName": "$albumName",
                             "apsaraMusic": "$apsaraMusic",
                             "apsaraThumnail": "$apsaraThumnail",
-
+                            
                         },
-                        "avatar":
+                        "avatar": 
                         {
                             $cond: {
-                                if: {
+                                if : {
                                     $eq: ["$avatar", {}]
                                 },
                                 then: null,
-                                else: "$avatar"
+                                else : "$avatar"
                             }
                         },
                         "urluserBadge": "$urluserBadge",
                         "statusCB": "$statusCB",
                         "privacy": "$privacy",
-                        "isViewed":
-                        {
+                        "isViewed": 
+                            {
                             $cond: {
-                                if: {
+                                if : {
                                     $eq: ["$isView", []]
                                 },
                                 then: false,
-                                else: true
+                                else : true
                             }
                         },
-
+                        
                     }
                 }
             }
         },
         {
-            "$sort":
+            "$sort": 
             {
-                'story.createdAt': -1
+                'story.createdAt': - 1
             }
         },
         {
-            "$project":
+            "$project": 
             {
                 _id: 0,
                 email: "$_id.email",
