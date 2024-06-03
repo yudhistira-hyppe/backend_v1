@@ -14708,7 +14708,7 @@ export class AuthService {
             try {
               if (user_username != null) {
                 if (await this.utilsService.validateUsername(user_username)) {
-                  await this.userauthsService.updatebyEmail(user_email, {
+                  await this.basic2SS.updatebyEmail(user_email, {
                     username: user_username
                   });
                 }
@@ -14884,7 +14884,7 @@ export class AuthService {
             try {
               if (user_username != null) {
                 if (await this.utilsService.validateUsername(user_username)) {
-                  await this.userauthsService.updatebyEmail(user_email, {
+                  await this.basic2SS.updatebyEmail(user_email, {
                     username: user_username
                   });
                 }
@@ -15122,7 +15122,7 @@ export class AuthService {
             try {
               if (user_username != null) {
                 if (await this.utilsService.validateUsername(user_username)) {
-                  await this.userauthsService.updatebyEmail(user_email, {
+                  await this.basic2SS.updatebyEmail(user_email, {
                     username: user_username
                   });
                 }
@@ -15228,7 +15228,7 @@ export class AuthService {
             try {
               if (user_username != null) {
                 if (await this.utilsService.validateUsername(user_username)) {
-                  await this.userauthsService.updatebyEmail(user_email, {
+                  await this.basic2SS.updatebyEmail(user_email, {
                     username: user_username
                   });
                 }
