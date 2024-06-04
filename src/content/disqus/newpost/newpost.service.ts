@@ -369,7 +369,7 @@ export class NewpostService {
             {
                 "$inc":
                 {
-                    views:1
+                    likes:1
                 },
                 "$push":
                 {
