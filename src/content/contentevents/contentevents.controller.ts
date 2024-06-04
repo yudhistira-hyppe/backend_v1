@@ -9296,6 +9296,25 @@ export class ContenteventsController {
     // } 
     else if (eventType == "VIEW") {
       var getpost = await this.postDisqusSS.findid(request.body.postID);
+      var postType=null;
+      var create_At=null;
+      var saleAmount=0;
+
+      try{
+        postType=getpost.postType;
+      }catch(e){
+        postType=null;
+      }
+      try{
+        create_At=getpost.createdAt;
+      }catch(e){
+        create_At=null;
+      }
+      try{
+        saleAmount=getpost.saleAmount;
+      }catch(e){
+        saleAmount=0;
+      }
       if (email_user !== email_receiverParty) {
         var idevent1 = null;
         var idevent2 = null;
@@ -9448,7 +9467,8 @@ export class ContenteventsController {
               if (idevent1 !== null) {
                 try {
                   // this.userChallengeViewv3(idevent1.toString(), "contentevents", "VIEW", request.body.postID, email_user, email_receiverParty);
-                  this.scoreviewrequest(idevent1.toString(), "contentevents", "VIEW", request.body.postID, email_user, email_receiverParty, listchallenge)
+                  // this.scoreviewrequest(idevent1.toString(), "contentevents", "VIEW", request.body.postID, email_user, email_receiverParty, listchallenge)
+                  this.scoreviewrequestnew(idevent1.toString(), "contentevents", "VIEW", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount)
                   console.log("sukses hitung score")
                 } catch (e) {
                   console.log("gagal ngitung skor" + e)
@@ -9482,11 +9502,31 @@ export class ContenteventsController {
     }
     else if (eventType == "LIKE") {
       var getpost = await this.postDisqusSS.findid(request.body.postID);
+      var postType=null;
+      var create_At=null;
+      var saleAmount=0;
+
+      try{
+        postType=getpost.postType;
+      }catch(e){
+        postType=null;
+      }
+      try{
+        create_At=getpost.createdAt;
+      }catch(e){
+        create_At=null;
+      }
+      try{
+        saleAmount=getpost.saleAmount;
+      }catch(e){
+        saleAmount=0;
+      }
       var ceck_data_DONE = await this.contenteventsService.ceckData(email_user, "LIKE", "DONE", email_receiverParty, "", request.body.postID);
       var ceck_data_ACCEPT = await this.contenteventsService.ceckData(email_receiverParty, "LIKE", "ACCEPT", "", email_user, request.body.postID);
       if (!(await this.utilsService.ceckData(ceck_data_DONE)) && !(await this.utilsService.ceckData(ceck_data_ACCEPT))) {
         var _id_1 = (await this.utilsService.generateId());
         var _id_2 = (await this.utilsService.generateId());
+       
         var CreateContenteventsDto1 = new CreateContenteventsDto();
         CreateContenteventsDto1._id = _id_1
         CreateContenteventsDto1.contentEventID = _id_1
@@ -9516,6 +9556,8 @@ export class ContenteventsController {
         CreateContenteventsDto2._class = "io.melody.hyppe.content.domain.ContentEvent"
         CreateContenteventsDto2.senderParty = email_user
         CreateContenteventsDto2.postID = request.body.postID
+
+
 
         if (await this.utilsService.ceckData(Insight_receiver)) {
           var _id_receiver = (await this.utilsService.generateId());
@@ -9548,25 +9590,7 @@ export class ContenteventsController {
           let event1 = resultdata1.eventType.toString();
           // await this.utilsService.counscore("CE", "prodAll", "contentevents", idevent1, event1, userbasic1._id);
           await this.contenteventsService.create(CreateContenteventsDto2);
-          var postType=null;
-          var create_At=null;
-          var saleAmount=0;
-
-          try{
-            postType=getpost.postType;
-          }catch(e){
-            postType=null;
-          }
-          try{
-            create_At=getpost.createdAt;
-          }catch(e){
-            create_At=null;
-          }
-          try{
-            saleAmount=getpost.saleAmount;
-          }catch(e){
-            saleAmount=0;
-          }
+         
           var result = getpost.userLike.filter((email) => email === email_user);
           if (result.length == 0) {
             await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
@@ -9598,9 +9622,14 @@ export class ContenteventsController {
 
 
           //this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
-          this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+       
 
-
+          try {
+            this.scorelikerequestnew(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount);
+            console.log("sukses hitung score")
+          } catch (e) {
+            console.log("gagal ngitung skor" + e)
+          }
 
 
         } catch (error) {
@@ -9648,7 +9677,15 @@ export class ContenteventsController {
 
             // this.userChallengeUnLike3(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty);
 
-            this.scoreunlikerequest(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+            // this.scoreunlikerequest(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+           
+
+            try {
+              this.scoreunlikerequestnew(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount);
+              console.log("sukses hitung score")
+            } catch (e) {
+              console.log("gagal ngitung skor" + e)
+            }
           } catch (error) {
             var fullurl = request.get("Host") + request.originalUrl;
             var timestamps_end = await this.utilsService.getDateTimeString();
@@ -9686,8 +9723,14 @@ export class ContenteventsController {
 
             // this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty);
 
-            this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
-
+            // this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+           
+            try {
+              this.scorelikerequestnew(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount);
+              console.log("sukses hitung score")
+            } catch (e) {
+              console.log("gagal ngitung skor" + e)
+            }
 
           } catch (error) {
             var fullurl = request.get("Host") + request.originalUrl;
@@ -9705,6 +9748,25 @@ export class ContenteventsController {
     }
     else if (eventType == "UNLIKE") {
       var getpost = await this.postDisqusSS.findid(request.body.postID);
+      var postType=null;
+      var create_At=null;
+      var saleAmount=0;
+
+      try{
+        postType=getpost.postType;
+      }catch(e){
+        postType=null;
+      }
+      try{
+        create_At=getpost.createdAt;
+      }catch(e){
+        create_At=null;
+      }
+      try{
+        saleAmount=getpost.saleAmount;
+      }catch(e){
+        saleAmount=0;
+      }
       var ceck_data_DONE = await this.contenteventsService.ceckData(email_user, "LIKE", "DONE", email_receiverParty, "", request.body.postID);
       var ceck_data_ACCEPT = await this.contenteventsService.ceckData(email_receiverParty, "LIKE", "ACCEPT", "", email_user, request.body.postID);
       if ((await this.utilsService.ceckData(ceck_data_DONE)) && (await this.utilsService.ceckData(ceck_data_ACCEPT))) {
@@ -9740,7 +9802,14 @@ export class ContenteventsController {
 
           //this.userChallengeUnLike3(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty);
 
-          this.scoreunlikerequest(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+          // this.scoreunlikerequest(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+         
+          try {
+            this.scoreunlikerequestnew(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount);
+            console.log("sukses hitung score")
+          } catch (e) {
+            console.log("gagal ngitung skor" + e)
+          }
         } catch (error) {
           var fullurl = request.get("Host") + request.originalUrl;
           var timestamps_end = await this.utilsService.getDateTimeString();
@@ -9787,7 +9856,13 @@ export class ContenteventsController {
 
               // this.userChallengeUnLike3(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty);
 
-              this.scoreunlikerequest(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+              // this.scoreunlikerequest(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+              try {
+                this.scoreunlikerequestnew(idevent1.toString(), "contentevents", "UNLIKE", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount);
+                console.log("sukses hitung score")
+              } catch (e) {
+                console.log("gagal ngitung skor" + e)
+              }
             } catch (error) {
               var fullurl = request.get("Host") + request.originalUrl;
               var timestamps_end = await this.utilsService.getDateTimeString();
@@ -9830,7 +9905,15 @@ export class ContenteventsController {
 
               //this.userChallengeLike3(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty);
 
-              this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+              // this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
+             
+
+              try {
+                this.scorelikerequestnew(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge,postType,create_At,saleAmount);
+                console.log("sukses hitung score")
+              } catch (e) {
+                console.log("gagal ngitung skor" + e)
+              }
             } catch (error) {
               var fullurl = request.get("Host") + request.originalUrl;
               var timestamps_end = await this.utilsService.getDateTimeString();
