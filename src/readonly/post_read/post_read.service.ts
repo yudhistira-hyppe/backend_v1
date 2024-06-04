@@ -26120,44 +26120,48 @@ export class PostsReadService {
             //
           }
         },
-
         {
-          "$lookup": {
-            from: "newUserBasics",
-            as: "userTag",
-            let: {
-              localID: { $ifNull: ['$tagPeople', []] }
-            },
-            pipeline: [
-              {
-                $match:
-                {
-                  $or: [
-                    {
-                      $expr: {
-                        $in: ['$_id', "$$localID"]
-                      }
-                    },
-                    {
-                      $expr: {
-                        $in: ['$_idAuth', "$$localID.$id"]
-                      }
-                    },
+					$set:{
+							userTag:"$tag2"
+					}
+				},
+        // {
+        //   "$lookup": {
+        //     from: "newUserBasics",
+        //     as: "userTag",
+        //     let: {
+        //       localID: { $ifNull: ['$tagPeople', []] }
+        //     },
+        //     pipeline: [
+        //       {
+        //         $match:
+        //         {
+        //           $or: [
+        //             {
+        //               $expr: {
+        //                 $in: ['$_id', "$$localID"]
+        //               }
+        //             },
+        //             {
+        //               $expr: {
+        //                 $in: ['$_idAuth', "$$localID.$id"]
+        //               }
+        //             },
 
-                  ]
-                },
+        //           ]
+        //         },
 
-              },
-              {
-                $project: {
-                  "_id": 1,
-                  "username": 1
-                }
-              }
-            ],
+        //       },
+        //       {
+        //         $project: {
+        //           "_id": 1,
+        //           "username": 1
+        //         }
+        //       }
+        //     ],
 
-          }
-        },
+        //   }
+        // },
         //   {
         //     "$lookup": {
         //         from: "newUserBasics",
@@ -28295,42 +28299,47 @@ export class PostsReadService {
           }
         },
         {
-          "$lookup": {
-            from: "newUserBasics",
-            as: "userTag",
-            let: {
-              localID: { $ifNull: ['$tagPeople', []] }
-            },
-            pipeline: [
-              {
-                $match:
-                {
-                  $or: [
-                    {
-                      $expr: {
-                        $in: ['$_id', "$$localID"]
-                      }
-                    },
-                    {
-                      $expr: {
-                        $in: ['$_idAuth', "$$localID.$id"]
-                      }
-                    },
+					$set:{
+							userTag:"$tag2"
+					}
+				},
+        // {
+        //   "$lookup": {
+        //     from: "newUserBasics",
+        //     as: "userTag",
+        //     let: {
+        //       localID: { $ifNull: ['$tagPeople', []] }
+        //     },
+        //     pipeline: [
+        //       {
+        //         $match:
+        //         {
+        //           $or: [
+        //             {
+        //               $expr: {
+        //                 $in: ['$_id', "$$localID"]
+        //               }
+        //             },
+        //             {
+        //               $expr: {
+        //                 $in: ['$_idAuth', "$$localID.$id"]
+        //               }
+        //             },
 
-                  ]
-                },
+        //           ]
+        //         },
 
-              },
-              {
-                $project: {
-                  "_id": 1,
-                  "username": 1
-                }
-              }
-            ],
+        //       },
+        //       {
+        //         $project: {
+        //           "_id": 1,
+        //           "username": 1
+        //         }
+        //       }
+        //     ],
 
-          }
-        },
+        //   }
+        // },
         {
           $lookup: {
             from: "settings",
@@ -29370,42 +29379,47 @@ export class PostsReadService {
           }
         },
         {
-          "$lookup": {
-            from: "newUserBasics",
-            as: "userTag",
-            let: {
-              localID: { $ifNull: ['$tagPeople', []] }
-            },
-            pipeline: [
-              {
-                $match:
-                {
-                  $or: [
-                    {
-                      $expr: {
-                        $in: ['$_id', "$$localID"]
-                      }
-                    },
-                    {
-                      $expr: {
-                        $in: ['$_idAuth', "$$localID.$id"]
-                      }
-                    },
+					$set:{
+							userTag:"$tag2"
+					}
+				},
+        // {
+        //   "$lookup": {
+        //     from: "newUserBasics",
+        //     as: "userTag",
+        //     let: {
+        //       localID: { $ifNull: ['$tagPeople', []] }
+        //     },
+        //     pipeline: [
+        //       {
+        //         $match:
+        //         {
+        //           $or: [
+        //             {
+        //               $expr: {
+        //                 $in: ['$_id', "$$localID"]
+        //               }
+        //             },
+        //             {
+        //               $expr: {
+        //                 $in: ['$_idAuth', "$$localID.$id"]
+        //               }
+        //             },
 
-                  ]
-                },
+        //           ]
+        //         },
 
-              },
-              {
-                $project: {
-                  "_id": 1,
-                  "username": 1
-                }
-              }
-            ],
+        //       },
+        //       {
+        //         $project: {
+        //           "_id": 1,
+        //           "username": 1
+        //         }
+        //       }
+        //     ],
 
-          }
-        },
+        //   }
+        // },
         {
           $lookup: {
             from: "settings",
