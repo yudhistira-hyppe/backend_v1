@@ -148,6 +148,11 @@ export class NewPostController {
             var postID = null;
             var posttype = null;
             var email = null;
+            var contentModeration=null;
+            var reportedStatus=null;
+            var visibility=null;
+            var activeContent=null;
+            var createdAtContent=null;
             try {
                 postID = data.data.postID;
             } catch (e) {
@@ -165,11 +170,33 @@ export class NewPostController {
             } catch (e) {
                 email = null;
             }
-
-
-    
+            try {
+                contentModeration = data.data.contentModeration;
+            } catch (e) {
+                contentModeration = null;
+            }
+            try {
+                reportedStatus = data.data.reportedStatus;
+            } catch (e) {
+                reportedStatus = null;
+            }
+            try {
+                visibility = data.data.visibility;
+            } catch (e) {
+                visibility = null;
+            }
+            try {
+                activeContent = data.data.active;
+            } catch (e) {
+                activeContent = null;
+            }
+            try {
+                createdAtContent = data.data.createdAt;
+            } catch (e) {
+                createdAtContent = null;
+            }
                 try {
-                    this.posttask(postID, email, current_date);
+                    this.posttask(postID, email, current_date,posttype,contentModeration,reportedStatus,visibility,activeContent,createdAtContent);
                 } catch (e) {
 
                 }
@@ -4964,7 +4991,7 @@ export class NewPostController {
         return Response;
     }
 
-    async posttask(postID: string, email: string, createdAt: string) {
+    async posttask(postID: string, email: string, createdAt: string,postType:string,contentModeration: boolean, reportedStatus: string,visibility: String,activeContent: boolean,createdAtContent: string) {
         var Posttask_ = new Posttask();
         Posttask_.postID = postID;
         Posttask_.email = email;
@@ -4974,6 +5001,12 @@ export class NewPostController {
         Posttask_.active = true;
         Posttask_.createdAt = createdAt;
         Posttask_.updatedAt = createdAt;
+        Posttask_.postType=postType;
+        Posttask_.contentModeration=contentModeration;
+        Posttask_.reportedStatus=reportedStatus;
+        Posttask_.visibility=visibility;
+        Posttask_.activeContent=activeContent;
+        Posttask_.createdAtContent=createdAtContent;
         try {
             await this.PosttaskService.create(Posttask_);
         } catch (e) {
