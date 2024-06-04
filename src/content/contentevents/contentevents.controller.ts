@@ -9712,6 +9712,7 @@ export class ContenteventsController {
           await this.insightsService.updateUnlikeByID(insightID2);
           await this.contenteventsService.updateUnlike(email_user, "LIKE", "DONE", request.body.postID, false);
           await this.contenteventsService.updateUnlike(email_receiverParty, "LIKE", "ACCEPT", request.body.postID, false);
+          
           var buanguser = getpost.userLike.filter((email) => email != email_user);
           await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID, buanguser);
 
