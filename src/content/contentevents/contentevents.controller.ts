@@ -41,6 +41,8 @@ import { UserbasicnewService } from 'src/trans/userbasicnew/userbasicnew.service
 import { NewpostService } from '../disqus/newpost/newpost.service';
 import { Userbasicnew } from 'src/trans/userbasicnew/schemas/userbasicnew.schema';
 import { temppostDISCUSS } from '../disqus/newpost/temppost.service';
+import { Newpost } from '../disqus/newpost/schemas/newpost.schema';
+import { tempposts2 } from '../disqus/newpost/schemas/temppost.schema';
 @Controller()
 export class ContenteventsController {
   private readonly logger = new Logger(ContenteventsController.name);
@@ -8923,7 +8925,7 @@ export class ContenteventsController {
   async synchInteractive(request: any, headers: any) {
     var timestamps_start = await this.utilsService.getDateTimeString();
     var listchallenge = null;
-    var checkexisttemppost = false;
+    // var checkexisttemppost = false;
 
     try {
       listchallenge = request.body.listchallenge;
@@ -8960,12 +8962,12 @@ export class ContenteventsController {
     iduser = userbasic1._id;
     isguest = userbasic1.guestMode;
 
-    if (request.body.postID != null && request.body.postID != undefined) {
-      var gettemppost = await this.tempostSS.findByPostId(request.body.postID);
-      if (await this.utilsService.ceckData(gettemppost)) {
-        checkexisttemppost = true;
-      }
-    }
+    // if (request.body.postID != null && request.body.postID != undefined) {
+    //   var gettemppost = await this.tempostSS.findByPostId(request.body.postID);
+    //   if (await this.utilsService.ceckData(gettemppost)) {
+    //     checkexisttemppost = true;
+    //   }
+    // }
 
     if (eventType == "FOLLOWING") {
       if (email_receiverParty != email_user) {
@@ -9295,6 +9297,7 @@ export class ContenteventsController {
     //   var datapost = await this.NewpostsService.updatePostviewer(request.body.postID, email_user);
     // } 
     else if (eventType == "VIEW") {
+      var prosesdata = false;
       if (email_user !== email_receiverParty) {
         var idevent1 = null;
         var idevent2 = null;
@@ -9367,15 +9370,32 @@ export class ContenteventsController {
             //await this.utilsService.counscore("CE", "prodAll", "contentevents", idevent1, event1, userbasic1._id);
             var dataconten = await this.contenteventsService.create(CreateContenteventsDto2);
 
-            var getpost = await this.postDisqusSS.findid(request.body.postID);
-            var result = getpost.userView.filter((email) => email === email_user);
-            if (result.length == 0) {
-              await this.postDisqusSS.updateView(email_receiverParty, email_user, request.body.postID);
+            prosesdata = true;
+            var listarray = request.body.userView;
+            listarray.push(email_user);
+            var updatepost = new Newpost();
+            updatepost.userView = listarray;
+            var updatetemp = new tempposts2();
+            updatetemp.userView = listarray;
 
-              if (checkexisttemppost == true) {
-                await this.tempostSS.updateView(email_receiverParty, email_user, request.body.postID);
-              }
+            await this.postDisqusSS.update(request.body.postID, updatepost);
+            try
+            {
+              await this.tempostSS.update(request.body.postID, updatetemp);
             }
+            catch(e)
+            {
+              // skip
+            }
+            // var getpost = await this.postDisqusSS.findid(request.body.postID);
+            // var result = getpost.userView.filter((email) => email === email_user);
+            // if (result.length == 0) {
+            //   await this.postDisqusSS.updateView(email_receiverParty, email_user, request.body.postID);
+
+            //   if (checkexisttemppost == true) {
+            //     await this.tempostSS.updateView(email_receiverParty, email_user, request.body.postID);
+            //   }
+            // }
             await this.insightsService.updateViewsByID(insightID2);
           } catch (error) {
             var fullurl = request.get("Host") + request.originalUrl;
@@ -9471,10 +9491,24 @@ export class ContenteventsController {
 
       }
 
-      var datapost = await this.postDisqusSS.updatePostviewer(request.body.postID, email_user);
+      if(prosesdata == false)
+      {
+        var listarray = request.body.userView;
+        listarray.push(email_user);
+        var updatepost = new Newpost();
+        updatepost.userView = listarray;
+        var updatetemp = new tempposts2();
+        updatetemp.userView = listarray;
 
-      if (checkexisttemppost == true) {
-        await this.tempostSS.updatePostviewer(request.body.postID, email_user);
+        await this.postDisqusSS.update(request.body.postID, updatepost);
+        try
+        {
+          await this.tempostSS.update(request.body.postID, updatetemp);
+        }
+        catch(e)
+        {
+          // skip
+        }  
       }
     }
     else if (eventType == "LIKE") {
@@ -9544,15 +9578,33 @@ export class ContenteventsController {
           let event1 = resultdata1.eventType.toString();
           // await this.utilsService.counscore("CE", "prodAll", "contentevents", idevent1, event1, userbasic1._id);
           await this.contenteventsService.create(CreateContenteventsDto2);
-          var getpost = await this.postDisqusSS.findid(request.body.postID);
-          var result = getpost.userLike.filter((email) => email === email_user);
-          if (result.length == 0) {
-            await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
 
-            if (checkexisttemppost == true) {
-              await this.tempostSS.updateLike(email_receiverParty, email_user, request.body.postID);
-            }
+          var listarray = request.body.userLike;
+          listarray.push(email_user);
+          var updatepost = new Newpost();
+          updatepost.userLike = listarray;
+          var updatetemp = new tempposts2();
+          updatetemp.userLike = listarray;
+  
+          await this.postDisqusSS.update(request.body.postID, updatepost);
+          try
+          {
+            await this.tempostSS.update(request.body.postID, updatetemp);
           }
+          catch(e)
+          {
+            // skip
+          }
+
+          // var getpost = await this.postDisqusSS.findid(request.body.postID);
+          // var result = getpost.userLike.filter((email) => email === email_user);
+          // if (result.length == 0) {
+          //   await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
+
+          //   if (checkexisttemppost == true) {
+          //     await this.tempostSS.updateLike(email_receiverParty, email_user, request.body.postID);
+          //   }
+          // }
           await this.insightsService.updateLikeByID(insightID2);
           if (!isguest) {
             this.sendInteractiveFCM2(email_receiverParty, "LIKE", request.body.postID, email_user);
@@ -9592,11 +9644,29 @@ export class ContenteventsController {
             await this.contenteventsService.updateUnlike(email_user, "LIKE", "DONE", request.body.postID, false);
             await this.contenteventsService.updateUnlike(email_receiverParty, "LIKE", "ACCEPT", request.body.postID, false);
             await this.insightsService.updateUnlikeByID(insightID2);
-            await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+            
+            var listarray = request.body.userLike;
+            var filterbuanguser = listarray.filter((email) => email != email_user);
+            var updatepost = new Newpost();
+            updatepost.userLike = filterbuanguser;
+            var updatetemp = new tempposts2();
+            updatetemp.userLike = filterbuanguser;
 
-            if (checkexisttemppost == true) {
-              await this.tempostSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+            await this.postDisqusSS.update(request.body.postID, updatepost);
+            try
+            {
+              await this.tempostSS.update(request.body.postID, updatetemp);
             }
+            catch(e)
+            {
+              // skip
+            }            
+            
+            // await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+
+            // if (checkexisttemppost == true) {
+            //   await this.tempostSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+            // }
 
             let idevent1 = ceck_data_DONE._id;
             let event1 = ceck_data_DONE.eventType.toString();
@@ -9630,10 +9700,27 @@ export class ContenteventsController {
             await this.contenteventsService.updateUnlike(email_user, "LIKE", "DONE", request.body.postID, true);
             await this.contenteventsService.updateUnlike(email_receiverParty, "LIKE", "ACCEPT", request.body.postID, true);
             await this.insightsService.updateLikeByID(insightID2);
-            await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
+            // await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
 
-            if (checkexisttemppost == true) {
-              await this.tempostSS.updateLike(email_receiverParty, email_user, request.body.postID);
+            // if (checkexisttemppost == true) {
+            //   await this.tempostSS.updateLike(email_receiverParty, email_user, request.body.postID);
+            // }
+
+            var listarray = request.body.userLike;
+            listarray.push(email_user);
+            var updatepost = new Newpost();
+            updatepost.userLike = listarray;
+            var updatetemp = new tempposts2();
+            updatetemp.userLike = listarray;
+
+            await this.postDisqusSS.update(request.body.postID, updatepost);
+            try
+            {
+              await this.tempostSS.update(request.body.postID, updatetemp);
+            }
+            catch(e)
+            {
+              // skip
             }
 
             let idevent1 = ceck_data_DONE._id;
@@ -9670,10 +9757,27 @@ export class ContenteventsController {
           await this.insightsService.updateUnlikeByID(insightID2);
           await this.contenteventsService.updateUnlike(email_user, "LIKE", "DONE", request.body.postID, false);
           await this.contenteventsService.updateUnlike(email_receiverParty, "LIKE", "ACCEPT", request.body.postID, false);
-          await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+          // await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
 
-          if (checkexisttemppost == true) {
-            await this.tempostSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+          // if (checkexisttemppost == true) {
+          //   await this.tempostSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+          // }
+
+          var listarray = request.body.userLike;
+          var filterbuanguser = listarray.filter((email) => email != email_user);
+          var updatepost = new Newpost();
+          updatepost.userLike = filterbuanguser;
+          var updatetemp = new tempposts2();
+          updatetemp.userLike = filterbuanguser;
+
+          await this.postDisqusSS.update(request.body.postID, updatepost);
+          try
+          {
+            await this.tempostSS.update(request.body.postID, updatetemp);
+          }
+          catch(e)
+          {
+            // skip
           }
 
           let idevent1 = ceck_data_DONE._id;
@@ -9711,10 +9815,27 @@ export class ContenteventsController {
               await this.contenteventsService.updateUnlike(email_user, "LIKE", "DONE", request.body.postID, false);
               await this.contenteventsService.updateUnlike(email_receiverParty, "LIKE", "ACCEPT", request.body.postID, false);
               await this.insightsService.updateUnlikeByID(insightID2);
-              await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+              // await this.postDisqusSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
 
-              if (checkexisttemppost == true) {
-                await this.tempostSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+              // if (checkexisttemppost == true) {
+              //   await this.tempostSS.updateUnLike(email_receiverParty, email_user, request.body.postID);
+              // }
+
+              var listarray = request.body.userLike;
+              var filterbuanguser = listarray.filter((email) => email != email_user);
+              var updatepost = new Newpost();
+              updatepost.userLike = filterbuanguser;
+              var updatetemp = new tempposts2();
+              updatetemp.userLike = filterbuanguser;
+
+              await this.postDisqusSS.update(request.body.postID, updatepost);
+              try
+              {
+                await this.tempostSS.update(request.body.postID, updatetemp);
+              }
+              catch(e)
+              {
+                // skip
               }
 
               let idevent1 = ceck_data_DONE._id;
@@ -9749,10 +9870,27 @@ export class ContenteventsController {
               await this.contenteventsService.updateUnlike(email_user, "LIKE", "DONE", request.body.postID, true);
               await this.contenteventsService.updateUnlike(email_receiverParty, "LIKE", "ACCEPT", request.body.postID, true);
               await this.insightsService.updateLikeByID(insightID2);
-              await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
+              // await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
 
-              if (checkexisttemppost == true) {
-                await this.tempostSS.updateLike(email_receiverParty, email_user, request.body.postID);
+              // if (checkexisttemppost == true) {
+              //   await this.tempostSS.updateLike(email_receiverParty, email_user, request.body.postID);
+              // }
+
+              var listarray = request.body.userLike;
+              listarray.push(email_user);
+              var updatepost = new Newpost();
+              updatepost.userLike = listarray;
+              var updatetemp = new tempposts2();
+              updatetemp.userLike = listarray;
+
+              await this.postDisqusSS.update(request.body.postID, updatepost);
+              try
+              {
+                await this.tempostSS.update(request.body.postID, updatetemp);
+              }
+              catch(e)
+              {
+                // skip
               }
 
               let idevent1 = ceck_data_DONE._id;
@@ -10260,9 +10398,15 @@ export class ContenteventsController {
         await this.contenteventsService.create(CreateContenteventsDto2);
         await this.postDisqusSS.updateReaction(email_receiverParty, request.body.postID);
 
-        if (checkexisttemppost == true) {
+        try
+        {
           await this.tempostSS.updateReaction(email_receiverParty, request.body.postID);
         }
+        catch(e)
+        {
+          // skip
+        }
+
         await this.insightsService.updateReactionsByID(insightID1);
         this.sendInteractiveFCM2(email_receiverParty, "REACTION", request.body.postID, email_user, Emote);
       } catch (error) {
