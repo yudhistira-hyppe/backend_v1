@@ -9548,6 +9548,25 @@ export class ContenteventsController {
           // await this.utilsService.counscore("CE", "prodAll", "contentevents", idevent1, event1, userbasic1._id);
           await this.contenteventsService.create(CreateContenteventsDto2);
           var getpost = await this.postDisqusSS.findid(request.body.postID);
+          var postType=null;
+          var create_At=null;
+          var saleAmount=0;
+
+          try{
+            postType=getpost.postType;
+          }catch(e){
+            postType=null;
+          }
+          try{
+            create_At=getpost.createdAt;
+          }catch(e){
+            create_At=null;
+          }
+          try{
+            saleAmount=getpost.saleAmount;
+          }catch(e){
+            saleAmount=0;
+          }
           var result = getpost.userLike.filter((email) => email === email_user);
           if (result.length == 0) {
             await this.postDisqusSS.updateLike(email_receiverParty, email_user, request.body.postID);
@@ -9578,6 +9597,7 @@ export class ContenteventsController {
           //this.userChallengeLike3(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty);
 
 
+          //this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
           this.scorelikerequest(idevent1.toString(), "contentevents", "LIKE", request.body.postID, email_user, email_receiverParty, listchallenge);
 
 
@@ -13170,6 +13190,17 @@ export class ContenteventsController {
 
   async scoreviewrequest(idevent: string, namatabel: string, event: string, postID: string, email_user: string, email_receiverParty: string, listchallenge: any[]) {
     await this.contenteventsService.scoreviewrequest(idevent, namatabel, event, postID, email_user, email_receiverParty, listchallenge)
+  }
+
+  async scoreunlikerequestnew(idevent: string, namatabel: string, event: string, postID: string, email_user: string, email_receiverParty: string, listchallenge: any[], postType: string, created_At: string, saleAmount: number) {
+    await this.contenteventsService.scoreunlikerequestnew(idevent, namatabel, event, postID, email_user, email_receiverParty, listchallenge,postType,created_At,saleAmount)
+  }
+  async scorelikerequestnew(idevent: string, namatabel: string, event: string, postID: string, email_user: string, email_receiverParty: string, listchallenge: any[], postType: string, created_At: string, saleAmount: number) {
+    await this.contenteventsService.scorelikerequestnew(idevent, namatabel, event, postID, email_user, email_receiverParty, listchallenge,postType,created_At,saleAmount)
+  }
+
+  async scoreviewrequestnew(idevent: string, namatabel: string, event: string, postID: string, email_user: string, email_receiverParty: string, listchallenge: any[], postType: string, created_At: string, saleAmount: number) {
+    await this.contenteventsService.scoreviewrequestnew(idevent, namatabel, event, postID, email_user, email_receiverParty, listchallenge,postType,created_At,saleAmount)
   }
   async scorefollowrequest(iduser: string, idevent: string, namatabel: string, event: string, listchallenge: any[]) {
     await this.contenteventsService.scorefollowrequest(iduser, idevent, namatabel, event, listchallenge)
