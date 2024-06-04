@@ -1883,8 +1883,8 @@ export class PostsReadController {
         // console.log(await this.utilsService.getDateTimeString());
         try {
 
-             //data = await this.notificationReadService.getNotification2V2(email, eventType, parseInt(pageNumber), parseInt(pageRow));
-            data = await this.notificationReadService.getNotification2V2(email, eventType, parseInt(pageNumber), 10);
+             data = await this.notificationReadService.getNotification2V2(email, eventType, parseInt(pageNumber), parseInt(pageRow));
+            //data = await this.notificationReadService.getNotification2V2(email, eventType, parseInt(pageNumber), 10);
             lengpict = data.length;
 
         } catch (e) {
