@@ -403,24 +403,33 @@ export class NewpostService {
         );
     }
 
-    async updateUnLike(email: string, email_target: string, postID: string) {
-        var getdata = await this.PostsModel.findOne({ postID: postID }).exec();
-        var setinput = {};
-        setinput['$inc'] = {
-            likes: -1
-        };
-        var setCELike = getdata.userLike;
-        var filterdata = setCELike.filter(emaildata => emaildata != email_target);
-        setinput["$set"] = {
-            "userLike": filterdata
-        }
+    async updateUnLike(email: string, email_target: string, postID: string, array:any[]) {
+        // var getdata = await this.PostsModel.findOne({ postID: postID }).exec();
+        // var setinput = {};
+        // setinput['$inc'] = {
+        //     likes: -1
+        // };
+        // var setCELike = getdata.userLike;
+        // var filterdata = setCELike.filter(emaildata => emaildata != email_target);
+        // setinput["$set"] = {
+        //     "userLike": filterdata
+        // }
 
         this.PostsModel.updateOne(
             {
                 email: email,
                 postID: postID,
             },
-            setinput,
+            {
+                "$inc":
+                {
+                    likes: -1
+                },
+                "$set":
+                {
+                    userLike:array
+                }
+            },
             function (err, docs) {
                 if (err) {
                     console.log(err);
