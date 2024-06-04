@@ -46029,151 +46029,151 @@ export class NewPostService {
           ],
         }
       },
-      {
-        "$lookup": {
-          from: "newUserBasics",
-          as: "userTag",
-          let: {
-            localID:
-            {
-              "$ifNull":
-                [
-                  '$tagPeople.$id',
-                  []
-                ]
-            },
-            localID2:
-            {
-              "$ifNull":
-                [
-                  '$tagPeople',
-                  []
-                ]
-            }
-          },
-          pipeline: [
-            {
-              $match:
-              {
-                $or: [
-                  {
-                    $expr: {
-                      $in: ['$_id', "$$localID2"]
-                    }
-                  },
-                  {
-                    $expr: {
-                      $in: ['$_id', "$$localID"]
-                    }
-                  },
-                  {
-                    $expr: {
-                      $in: ['$_idAuth', "$$localID"]
-                    }
-                  },
+      // {
+      //   "$lookup": {
+      //     from: "newUserBasics",
+      //     as: "userTag",
+      //     let: {
+      //       localID:
+      //       {
+      //         "$ifNull":
+      //           [
+      //             '$tagPeople.$id',
+      //             []
+      //           ]
+      //       },
+      //       localID2:
+      //       {
+      //         "$ifNull":
+      //           [
+      //             '$tagPeople',
+      //             []
+      //           ]
+      //       }
+      //     },
+      //     pipeline: [
+      //       {
+      //         $match:
+      //         {
+      //           $or: [
+      //             {
+      //               $expr: {
+      //                 $in: ['$_id', "$$localID2"]
+      //               }
+      //             },
+      //             {
+      //               $expr: {
+      //                 $in: ['$_id', "$$localID"]
+      //               }
+      //             },
+      //             {
+      //               $expr: {
+      //                 $in: ['$_idAuth', "$$localID"]
+      //               }
+      //             },
 
-                ]
-              },
+      //           ]
+      //         },
 
-            },
-            {
-              $project: {
-                "_id": 1,
-                "username": 1,
-                "email": 1,
-                "avatar":
-                {
-                  "$ifNull":
-                    [
-                      {
-                        "mediaBasePath": "$mediaBasePath",
-                        "mediaUri": "$mediaUri",
-                        "originalName": "$originalName",
-                        "fsSourceUri": "$fsSourceUri",
-                        "fsSourceName": "$fsSourceName",
-                        "fsTargetUri": "$fsTargetUri",
-                        "mediaType": "$mediaType",
-                        "mediaEndpoint": "$mediaEndpoint",
-                      },
-                      null
-                    ]
-                },
-                "urluserBadge":
-                {
-                  "$ifNull":
-                    [
-                      {
-                        "$arrayElemAt":
-                          [
-                            {
-                              "$filter":
-                              {
-                                input: "$userBadge",
-                                as: "listbadge",
-                                cond:
-                                {
-                                  "$and":
-                                    [
-                                      {
-                                        "$eq":
-                                          [
-                                            "$$listbadge.isActive", true
-                                          ]
-                                      },
-                                      {
-                                        "$lte":
-                                          [
-                                            {
-                                              "$dateToString": {
-                                                "format": "%Y-%m-%d %H:%M:%S",
-                                                "date": {
-                                                  "$add": [
-                                                    new Date(),
-                                                    25200000
-                                                  ]
-                                                }
-                                              }
-                                            },
-                                            "$$listbadge.endDatetime"
-                                          ]
-                                      }
-                                    ]
-                                }
-                              }
-                            }, 0
-                          ]
-                      },
-                      []
-                    ]
-                },
-              }
-            },
-            {
-              "$project":
-              {
-                "_id": 1,
-                "username": 1,
-                "email": 1,
-                "avatar": 1,
-                "urluserBadge":
-                {
-                  "$ifNull":
-                    [
-                      {
-                        "$arrayElemAt":
-                          [
-                            "$urluserBadge", 0
-                          ]
-                      },
-                      null
-                    ]
-                }
-              }
-            }
-          ],
+      //       },
+      //       {
+      //         $project: {
+      //           "_id": 1,
+      //           "username": 1,
+      //           "email": 1,
+      //           "avatar":
+      //           {
+      //             "$ifNull":
+      //               [
+      //                 {
+      //                   "mediaBasePath": "$mediaBasePath",
+      //                   "mediaUri": "$mediaUri",
+      //                   "originalName": "$originalName",
+      //                   "fsSourceUri": "$fsSourceUri",
+      //                   "fsSourceName": "$fsSourceName",
+      //                   "fsTargetUri": "$fsTargetUri",
+      //                   "mediaType": "$mediaType",
+      //                   "mediaEndpoint": "$mediaEndpoint",
+      //                 },
+      //                 null
+      //               ]
+      //           },
+      //           "urluserBadge":
+      //           {
+      //             "$ifNull":
+      //               [
+      //                 {
+      //                   "$arrayElemAt":
+      //                     [
+      //                       {
+      //                         "$filter":
+      //                         {
+      //                           input: "$userBadge",
+      //                           as: "listbadge",
+      //                           cond:
+      //                           {
+      //                             "$and":
+      //                               [
+      //                                 {
+      //                                   "$eq":
+      //                                     [
+      //                                       "$$listbadge.isActive", true
+      //                                     ]
+      //                                 },
+      //                                 {
+      //                                   "$lte":
+      //                                     [
+      //                                       {
+      //                                         "$dateToString": {
+      //                                           "format": "%Y-%m-%d %H:%M:%S",
+      //                                           "date": {
+      //                                             "$add": [
+      //                                               new Date(),
+      //                                               25200000
+      //                                             ]
+      //                                           }
+      //                                         }
+      //                                       },
+      //                                       "$$listbadge.endDatetime"
+      //                                     ]
+      //                                 }
+      //                               ]
+      //                           }
+      //                         }
+      //                       }, 0
+      //                     ]
+      //                 },
+      //                 []
+      //               ]
+      //           },
+      //         }
+      //       },
+      //       {
+      //         "$project":
+      //         {
+      //           "_id": 1,
+      //           "username": 1,
+      //           "email": 1,
+      //           "avatar": 1,
+      //           "urluserBadge":
+      //           {
+      //             "$ifNull":
+      //               [
+      //                 {
+      //                   "$arrayElemAt":
+      //                     [
+      //                       "$urluserBadge", 0
+      //                     ]
+      //                 },
+      //                 null
+      //               ]
+      //           }
+      //         }
+      //       }
+      //     ],
 
-        }
-      },
+      //   }
+      // },
       {
         '$lookup': {
           from: 'interests_repo',
@@ -46356,7 +46356,7 @@ export class NewPostService {
           urlLink: 1,
           judulLink: 1,
           "postID": 1,
-          "tagPeople": "$userTag",
+          // "tagPeople": "$userTag",
           "postType": 1,
           "description": 1,
           "active": 1,
@@ -46739,8 +46739,8 @@ export class NewPostService {
       },
     );
 
-    var util = require('util');
-    console.log(util.inspect(pipeline, { depth: null, showHidden: false }));
+    // var util = require('util');
+    // console.log(util.inspect(pipeline, { depth: null, showHidden: false }));
 
     var data = await this.loaddata.aggregate(pipeline);
     return data;
