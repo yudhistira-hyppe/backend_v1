@@ -2684,7 +2684,8 @@ export class NewPostController {
 
         try {
 
-            data = await this.newPostService.landingpageMigrationUpdate(email, email, postType, postid, visibility, active, exp, withinsight, parseInt(pageNumber), parseInt(pageRow));
+            data = await this.newPostService.landingPageGelondonganSamaEmail(email, postType, parseInt(pageNumber), parseInt(pageRow));
+            // data = await this.newPostService.landingpageMigrationUpdate(email, email, postType, postid, visibility, active, exp, withinsight, parseInt(pageNumber), parseInt(pageRow));
             // data = await this.newPostService.landingpageMigration(email, email, postType, postid, visibility, active, exp, withinsight, parseInt(pageNumber), parseInt(pageRow));
             lengpict = data.length;
 

@@ -12,6 +12,7 @@ import { NotificationReadService } from './notification_read.service';
 import { NewPostService } from 'src/content/new_post/new_post.service';
 import { NewPostContentService } from 'src/content/new_post/new_postcontent.service';
 import { TempPOSTService } from 'src/content/new_post/temp_post.service';
+import { UserbasicnewService } from 'src/trans/userbasicnew/userbasicnew.service';
 
 @Controller()
 export class PostsReadController {
@@ -26,7 +27,8 @@ export class PostsReadController {
         private readonly notificationReadService: NotificationReadService,
         private readonly post2SS: NewPostService,
         private readonly postContent2SS: NewPostContentService,
-        private readonly tempPOSTss: TempPOSTService
+        private readonly tempPOSTss: TempPOSTService,
+        private readonly basic2SS: UserbasicnewService
     ) { }
 
     @Post('api/posts/getuserposts/my')
@@ -896,7 +898,16 @@ export class PostsReadController {
         try {
 
             //data = await this.postsReadService.landingpageMy2V2(email, postType, parseInt(pageNumber), parseInt(pageRow), emailLogin);
-            data = await this.post2SS.landingpageMigration(email, emailLogin, postType, postid, visibility, active, exp, withinsight, parseInt(pageNumber), parseInt(pageRow))
+            // data = await this.post2SS.landingpageMigration(email, emailLogin, postType, postid, visibility, active, exp, withinsight, parseInt(pageNumber), parseInt(pageRow))
+            // data = await this.post2SS.landingpageMigrationUpdate(email, emailLogin, postType, postid, visibility, active, exp, withinsight, parseInt(pageNumber), parseInt(pageRow))
+            if(email != emailLogin)
+            {
+                data = await this.post2SS.landingPageGelondonganBedaEmail(email, emailLogin, postType, parseInt(pageNumber), parseInt(pageRow));    
+            }
+            else
+            {
+                data = await this.post2SS.landingPageGelondonganSamaEmail(email, postType, parseInt(pageNumber), parseInt(pageRow));
+            }
             lengpict = data.length;
             console.log("data", data);
         } catch (e) {
@@ -907,13 +918,33 @@ export class PostsReadController {
         }
 
         //CECK FOLLOWING
-        var getFollowing = false;
-        var ceck_data_FOLLOW = await this.contenteventsService.ceckData(String(emailLogin), "FOLLOWING", "ACCEPT", "", email, "", true);
-        if (await this.utilsService.ceckData(ceck_data_FOLLOW)) {
-            getFollowing = true;
+        // var getFollowing = false;
+        // var ceck_data_FOLLOW = await this.contenteventsService.ceckData(String(emailLogin), "FOLLOWING", "ACCEPT", "", email, "", true);
+        // if (await this.utilsService.ceckData(ceck_data_FOLLOW)) {
+        //     getFollowing = true;
+        // }
+        // if (data != null) {
+        //     data.forEach(v => { v.following = getFollowing; });
+        // }
+
+        var getuseremail = await this.basic2SS.findBymail(email);
+        let checkfollower = null;
+        try
+        {
+            checkfollower = getuseremail.follower.filter((emaildata) => emaildata == emailLogin);
         }
-        if (data != null) {
-            data.forEach(v => { v.following = getFollowing; });
+        catch(e)
+        {
+            checkfollower = []; 
+        }
+
+        if(checkfollower.length == 1)
+        {
+            data.forEach(v => { v.following = true });
+        }
+        else
+        {
+            data.forEach(v => { v.following = false });
         }
 
         var tempapsaraMusicThumbId = [];
