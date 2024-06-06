@@ -248,7 +248,36 @@ export class NewPostController {
         var posts = null;
         var startDatetime = null;
         var endDatetime = null;
+        var postID = null;
+        var postType = null;
+        var contentModeration=null;
+        var reportedStatus=null;
+        var visibility=null;
+        var activeContent=null;
+        var emailContent=null;
+        var PostTask_= new Posttask();
 
+        if(body.postID !==undefined){
+            postID=body.postID;
+        }
+        if(body.postType !==undefined){
+            postType=body.postType;
+        }
+        if(body.contentModeration !==undefined){
+            contentModeration=body.contentModeration;
+        }
+        if(body.reportedStatus !==undefined){
+            reportedStatus=body.reportedStatus;
+        }
+        if(body.visibility !==undefined){
+            visibility=body.visibility;
+        }
+        if(body.active !==undefined){
+            activeContent=body.active;
+        }
+        if(body.email !==undefined){
+            emailContent=body.email;
+        }
         try {
             posts = await this.newPostService.findid(body.postID.toString());
         } catch (e) {
@@ -288,7 +317,12 @@ export class NewPostController {
                 tags = [];
                 cats = [];
             }
+            PostTask_.active=false;
+            try{
+                this.posttaskUpdate(postID,PostTask_)
+            }catch(e){
 
+            }
             if (datapostchallenge == null) {
                 if (tags.length > 0) {
                     const stringSet = new Set(tags);
@@ -490,6 +524,14 @@ export class NewPostController {
                 datapostawal = null;
                 tags = [];
                 cats = [];
+            }
+            if(visibility !==undefined){
+                PostTask_.visibility=visibility;
+                try{
+                    this.posttaskUpdate(postID,PostTask_)
+                }catch(e){
+    
+                }
             }
             var datatag = null;
             if (datapostchallenge == null) {
