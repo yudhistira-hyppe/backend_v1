@@ -31,6 +31,8 @@ import { CreateuserbasicnewDto } from '../userbasicnew/dto/Createuserbasicnew-dt
 import { TempPOSTService } from 'src/content/new_post/temp_post.service';
 import { tempposts } from 'src/content/new_post/schemas/tempPost.schema';
 import { AdsService as AdsV2Service } from '../adsv2/ads/ads.service';
+import { Posttask } from '../../content/posttask/schemas/posttask.schema';
+import { PosttaskService } from '../../content/posttask/posttask.service';
 @Controller('api/reportuser')
 export class ReportuserController {
 
@@ -55,7 +57,8 @@ export class ReportuserController {
         private readonly basic2SS: UserbasicnewService,
         private readonly post2SS: NewPostService,
         private readonly temppost2SS: TempPOSTService,
-        private readonly ads2SS: AdsV2Service
+        private readonly ads2SS: AdsV2Service,
+        private readonly PosttaskService: PosttaskService,
     ) { }
     @UseGuards(JwtAuthGuard)
     @Get('all')
@@ -2131,6 +2134,8 @@ export class ReportuserController {
         var name = "";
         var event = "";
         var tipe = "";
+        var PostTask_= new Posttask();
+        var current_date = await this.utilsService.getDateTimeString();
         var request_json = JSON.parse(JSON.stringify(request.body));
 
         if (request_json["postID"] !== undefined) {
@@ -2185,6 +2190,14 @@ export class ReportuserController {
             }
 
             if (reportedUserHandle.length > 0) {
+
+                PostTask_.reportedStatus="BLURRED";
+                PostTask_.updatedAt=current_date;
+                try{
+                    this.posttaskUpdate(postID,PostTask_)
+                }catch(e){
+    
+                }
                 await this.post2SS.updateFlaging(postID, dt.toISOString());
                 await this.post2SS.nonactive(postID, dt.toISOString());
                 this.sendReportAppealFCMV2(name, event, tipe, postID);
@@ -2198,6 +2211,14 @@ export class ReportuserController {
                     "status": "FLAGING"
                 };
                 arrayreportedHandle.push(objreporthandle);
+                
+                PostTask_.reportedStatus="BLURRED";
+                PostTask_.updatedAt=current_date;
+                try{
+                    this.posttaskUpdate(postID,PostTask_)
+                }catch(e){
+    
+                }
 
                 await this.post2SS.updateFlagingEmpty(postID, dt.toISOString(), arrayreportedHandle);
                 await this.post2SS.nonactive(postID, dt.toISOString());
@@ -6338,4 +6359,32 @@ export class ReportuserController {
         var eventType = type.toString();
         await this.utilsService.sendFcm(email_post, titlein, titleen, bodyin_get, bodyen_get, eventType, event, postID, post_type, undefined, "APPEAL");
     }
+
+    async posttaskUpdate(postID: string,Posttask_:Posttask) {
+        var dataposttask=null;
+ 
+        try{
+         dataposttask= await this.PosttaskService.findBypostID(postID);
+        }catch(e){
+         dataposttask=null;
+        }
+ 
+        if(dataposttask !==null){
+         let id=null;
+ 
+         try{
+             id=dataposttask._id.toString();
+         }catch(e){
+             id=null;
+         }
+       
+         try {
+             await this.PosttaskService.update(id,Posttask_);
+         } catch (e) {
+ 
+         }
+        }
+        
+        
+     }
 }
