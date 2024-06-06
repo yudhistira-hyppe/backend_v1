@@ -284,6 +284,14 @@ export class NewPostModService {
 
 
   async cmodResponse(body: any) {
+    var dt = new Date(Date.now());
+    dt.setHours(dt.getHours() + 7); // timestamp
+    dt = new Date(dt);
+    var strdate = dt.toISOString();
+    var repdate = strdate.replace('T', ' ');
+    var splitdate = repdate.split('.');
+    var timedate = splitdate[0];
+    var PostTask_= new Posttask();
     if (body.content == undefined) {
       this.logger.error('cmodResponse >>> body content is undefined');
       return;
