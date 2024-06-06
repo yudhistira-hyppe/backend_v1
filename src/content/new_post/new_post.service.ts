@@ -47654,7 +47654,31 @@ export class NewPostService {
                 "then": false,
                 "else": true
               }
-            }
+            },
+            "following": 
+            {
+                $cond: 
+                {
+                    if : {
+                        $eq: ["$userBasic.follower", []]
+                    },
+                    then: false,
+                    else : 
+                        {
+                        $cond: 
+                        {
+                            if : {
+                                $in: [emailLogin, {
+                                    $arrayElemAt: ["$userBasic.follower", 0]
+                                }]
+                            },
+                            then: true,
+                            else : false
+                        }
+                    },
+                    
+                }
+            },
           }
         }
       ]);
@@ -48168,7 +48192,31 @@ export class NewPostService {
                 then: false,
                 else: true
               }
-            }
+            },
+            following: 
+            {
+                $cond: 
+                {
+                    if : {
+                        $eq: ["$userBasic.follower", []]
+                    },
+                    then: false,
+                    else : 
+                        {
+                        $cond: 
+                        {
+                            if : {
+                                $in: [emailLogin, {
+                                    $arrayElemAt: ["$userBasic.follower", 0]
+                                }]
+                            },
+                            then: true,
+                            else : false
+                        }
+                    },
+                    
+                }
+            },
           }
         }
       ]);
@@ -49079,7 +49127,31 @@ export class NewPostService {
                 "then": false,
                 "else": true
               }
-            }
+            },
+            "following": 
+            {
+                $cond: 
+                {
+                    if : {
+                        $eq: ["$userBasic.follower", []]
+                    },
+                    then: false,
+                    else : 
+                        {
+                        $cond: 
+                        {
+                            if : {
+                                $in: [emailLogin, {
+                                    $arrayElemAt: ["$userBasic.follower", 0]
+                                }]
+                            },
+                            then: true,
+                            else : false
+                        }
+                    },
+                    
+                }
+            },
           }
         }
       ]);
