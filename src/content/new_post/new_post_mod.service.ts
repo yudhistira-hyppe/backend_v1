@@ -4,7 +4,8 @@ import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
 import { AppGateway } from 'src/content/socket/socket.gateway';
 import { NewPostService } from './new_post.service';
-
+import { Posttask } from '../../content/posttask/schemas/posttask.schema';
+import { PosttaskService } from '../../content/posttask/posttask.service';
 @Injectable()
 export class NewPostModService {
   private readonly logger = new Logger(NewPostModService.name);
@@ -14,6 +15,7 @@ export class NewPostModService {
     private utilService: UtilsService,
     private gtw: AppGateway,
     private readonly configService: ConfigService,
+    private PosttaskService: PosttaskService,
   ) { }
 
   async cmodImage(postId: string, url: string) {
