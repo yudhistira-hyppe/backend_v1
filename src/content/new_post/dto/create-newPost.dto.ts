@@ -185,6 +185,7 @@ export class PostData {
   urluserBadge: any[];
   stiker: any[];
   text: any[];
+  contentModeration: boolean;
 }
 
 export class Messages {
