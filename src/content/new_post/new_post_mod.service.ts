@@ -433,4 +433,32 @@ export class NewPostModService {
       return highest['scene']
     }
   }
+
+  async posttaskUpdate(postID: string,Posttask_:Posttask) {
+    var dataposttask=null;
+
+    try{
+     dataposttask= await this.PosttaskService.findBypostID(postID);
+    }catch(e){
+     dataposttask=null;
+    }
+
+    if(dataposttask !==null){
+     let id=null;
+
+     try{
+         id=dataposttask._id.toString();
+     }catch(e){
+         id=null;
+     }
+   
+     try {
+         await this.PosttaskService.update(id,Posttask_);
+     } catch (e) {
+
+     }
+    }
+    
+    
+ }
 }
