@@ -3023,13 +3023,13 @@ export class TransactionsController {
                         this.posts2SS.noneActiveAllDiscus(postid, idtransaction);
                         this.posts2SS.noneActiveAllDiscusLog(postid, idtransaction);
 
-                        // PostTask_.email=emailbuyer.toString();
-                        // PostTask_.updatedAt=timedate;
-                        // try{
-                        //     this.posttaskUpdate(postid,PostTask_)
-                        // }catch(e){
+                        PostTask_.email=emailbuyer.toString();
+                        PostTask_.updatedAt=timedate;
+                        try{
+                            this.posttaskUpdate(postid,PostTask_)
+                        }catch(e){
             
-                        // }
+                        }
 
                         if (datapost.boosted != undefined) {
 

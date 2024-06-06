@@ -318,14 +318,14 @@ export class NewPostController {
                 tags = [];
                 cats = [];
             }
-            // PostTask_.active=false;
-            // PostTask_.activeContent=false;
-            // PostTask_.updatedAt=current_date;
-            // try{
-            //     this.posttaskUpdate(postID,PostTask_)
-            // }catch(e){
+            PostTask_.active=false;
+            PostTask_.activeContent=false;
+            PostTask_.updatedAt=current_date;
+            try{
+                this.posttaskUpdate(postID,PostTask_)
+            }catch(e){
 
-            // }
+            }
             if (datapostchallenge == null) {
                 if (tags.length > 0) {
                     const stringSet = new Set(tags);
@@ -528,15 +528,15 @@ export class NewPostController {
                 tags = [];
                 cats = [];
             }
-            // if(visibility !==undefined){
-            //     PostTask_.visibility=visibility;
-            //     PostTask_.updatedAt=current_date;
-            //     try{
-            //         this.posttaskUpdate(postID,PostTask_)
-            //     }catch(e){
+            if(visibility !==undefined){
+                PostTask_.visibility=visibility;
+                PostTask_.updatedAt=current_date;
+                try{
+                    this.posttaskUpdate(postID,PostTask_)
+                }catch(e){
     
-            //     }
-            // }
+                }
+            }
             var datatag = null;
             if (datapostchallenge == null) {
                 if (tags.length > 0) {
