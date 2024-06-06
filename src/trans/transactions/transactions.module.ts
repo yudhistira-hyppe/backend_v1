@@ -34,10 +34,11 @@ import { LogapisModule } from '../logapis/logapis.module';
 import { AdsPriceCreditsModule } from '../adsv2/adspricecredits/adspricecredits.module';
 import { UserbasicnewModule } from '../userbasicnew/userbasicnew.module';
 import { NewPostModule } from 'src/content/new_post/new_post.module';
-
+import { PosttaskModule } from '../../content/posttask/posttask.module';
 @Module({
 
     imports: [
+        PosttaskModule,
         UserbasicnewModule,
         NewPostModule,
         LogapisModule,

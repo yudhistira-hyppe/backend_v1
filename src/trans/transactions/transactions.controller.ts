@@ -47,7 +47,8 @@ import { UserbasicnewService } from '../userbasicnew/userbasicnew.service';
 import { NewPostService } from 'src/content/new_post/new_post.service';
 import { CreateNewPostDTO } from 'src/content/new_post/dto/create-newPost.dto';
 import { NewPostContentService } from 'src/content/new_post/new_postcontent.service';
-
+import { Posttask } from '../../content/posttask/schemas/posttask.schema';
+import { PosttaskService } from '../../content/posttask/posttask.service';
 const cheerio = require('cheerio');
 const nodeHtmlToImage = require('node-html-to-image');
 @Controller()
@@ -85,6 +86,7 @@ export class TransactionsController {
         private readonly basic2SS: UserbasicnewService,
         private readonly posts2SS: NewPostService,
         private readonly postsContent2SS: NewPostContentService,
+        private readonly PosttaskService: PosttaskService,
     ) { }
 
     @UseGuards(JwtAuthGuard)
@@ -2894,7 +2896,7 @@ export class TransactionsController {
         var repdate = strdate.replace('T', ' ');
         var splitdate = repdate.split('.');
         var timedate = splitdate[0];
-
+        var PostTask_= new Posttask();
         try {
 
             datavabankbca = await this.settingsService.findOne(idbankvachargeBCA);
@@ -3020,6 +3022,14 @@ export class TransactionsController {
                         await this.posts2SS.updateemail(postid, emailbuyer.toString(), iduserbuy, timedate);
                         this.posts2SS.noneActiveAllDiscus(postid, idtransaction);
                         this.posts2SS.noneActiveAllDiscusLog(postid, idtransaction);
+
+                        PostTask_.email=emailbuyer.toString();
+                        PostTask_.updatedAt=timedate;
+                        try{
+                            this.posttaskUpdate(postid,PostTask_)
+                        }catch(e){
+            
+                        }
 
                         if (datapost.boosted != undefined) {
 
@@ -18531,5 +18541,33 @@ export class TransactionsController {
 
         return { response_code: 202, data, messages };
     }
+
+    async posttaskUpdate(postID: string,Posttask_:Posttask) {
+        var dataposttask=null;
+ 
+        try{
+         dataposttask= await this.PosttaskService.findBypostID(postID);
+        }catch(e){
+         dataposttask=null;
+        }
+ 
+        if(dataposttask !==null){
+         let id=null;
+ 
+         try{
+             id=dataposttask._id.toString();
+         }catch(e){
+             id=null;
+         }
+       
+         try {
+             await this.PosttaskService.update(id,Posttask_);
+         } catch (e) {
+ 
+         }
+        }
+        
+        
+     }
 }
 
