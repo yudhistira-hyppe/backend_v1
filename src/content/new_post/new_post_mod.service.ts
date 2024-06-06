@@ -337,6 +337,13 @@ export class NewPostModService {
       pd.contentModeration = true;
       pd.reportedStatus = 'OWNED';
 
+      // PostTask_.contentModeration=true;
+      // PostTask_.updatedAt=timedate;
+      // try{
+      //     this.posttaskUpdate(pid,PostTask_)
+      // }catch(e){
+
+      // }
       
 
       if (pold != true) {
@@ -347,6 +354,14 @@ export class NewPostModService {
     } else {
       pd.contentModeration = false;
       pd.reportedStatus = 'ALL';
+
+      // PostTask_.contentModeration=false;
+      // PostTask_.updatedAt=timedate;
+      // try{
+      //     this.posttaskUpdate(pid,PostTask_)
+      // }catch(e){
+
+      // }
     }
     let today = new Date();
     pd.contentModerationDate = await this.utilService.getDateTimeString();
