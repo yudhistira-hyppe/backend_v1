@@ -11,7 +11,8 @@ export class OyPgService {
     async inquiryAccount(accountInfo: OyAccountInquiry): Promise<OyAccountInquiryResponse> {
         let config = { headers: { "x-oy-username": this.configService.get("OY_USERNAME"), "x-api-key": this.configService.get("OY_APIKEY") } };
         const res = await this.httpService.post(this.configService.get("OY_ENDPOINT") + 'account-inquiry', accountInfo, config).toPromise();
-        console.log(res);
+        console.log("INQUIRY RESULT:");
+        console.log(res.data);
         const data = res.data;
         return data;
     }
