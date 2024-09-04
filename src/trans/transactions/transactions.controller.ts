@@ -5024,6 +5024,8 @@ export class TransactionsController {
                 var namaakun = null;
                 try {
                     datareqinq = await this.oyPgService.inquiryAccount(datareqinquiry);
+                    console.log("datareqinq");
+                    console.log(datareqinq);
                 } catch (e) {
                     datareqinq = null;
                 }
