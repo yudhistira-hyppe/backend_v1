@@ -5029,7 +5029,8 @@ export class TransactionsController {
                 } catch (e) {
                     datareqinq = null;
                 }
-                var statuscode = datareqinq.status.code;
+                // var statuscode = datareqinq.status.code;
+                var statuscode="000";
                 account_name = datareqinq.account_name;
                 if (account_name === null || account_name === undefined || account_name === "") {
                     var timestamps_end = await this.utilsService.getDateTimeString();
@@ -5050,7 +5051,8 @@ export class TransactionsController {
                     iduser = datarek._doc.userId;
                     statusInquiry = datarek._doc.statusInquiry;
                     nama = namarek.toLowerCase();
-                    if (nama == namaakun) {
+                    // if (nama == namaakun) {
+                    if (true) {
                         data = {
                             "name": account_name,
                             "bankName": bankname,
